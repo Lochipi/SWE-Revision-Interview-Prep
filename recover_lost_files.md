@@ -10,34 +10,39 @@ You might find yourself accidentally deleting a branch containing a file or mayb
 ### Terms - commands
 We will start by defining some commands here. 
  `git reflog`
-The git [reflog]((https://git-scm.com/docs/git-cherry-pick)) command is used by Git to record updates made to the tips of branches. It allows you to return to commits even to the ones that are not referenced by any branch or any tag. After rewriting history, the reflog includes information about the previous state of branches and makes it possible to go back to that state if needed. It is important to note it, this would come into play at the later stage. 
-`git reflog <number>` 
-    <image of doing reflog>
-    You can have it followed by the number(optional) to give you how many you want it to show in the front and tail,  `git reflog -5` and `git reflog --tail -3`
-    You can check out more about it (here)[https://www.w3docs.com/learn-git/git-reflog.html]
+The git [reflog](https://git-scm.com/docs/git-cherry-pick) command is used by Git to record updates made to the tips of branches. It allows you to return to commits even to the ones that are not referenced by any branch or any tag. After rewriting history, the reflog includes information about the previous state of branches and makes it possible to go back to that state if needed. It is important to note it, this would come into play at the later stage. 
+**git reflog <number>**  - `git reflog -3`
+![image](https://github.com/Lochipi/Blogs/assets/108942025/c64a7f6a-f5c4-493c-af58-539887b363db)
+
+You can have it followed by the number(optional) to give you how many you want it to show in the front and tail,  `git reflog -5` and `git reflog --tail -3`
+    You can check out more about it [here](https://www.w3docs.com/learn-git/git-reflog.html)
 
 ## The Danger Zone: Accidental Deletion
 Now, let's get hands on. 
 Create a repo initialize it `git init` and have some files in it, let's have 2 the `readme.md`, `contributing.md`. 
 Make a directory using this command `mkdir git-practice` and cd into it using `cd <folder_name>`. Create the two files in here.You can then add some texts in the files.
-// image of showing files. files_ls.png
+![image](https://github.com/Lochipi/Blogs/assets/108942025/91618c0b-32f6-4d99-8cb1-2409b1f743db)
 
 Moving forward, let’s add the files to the staging area and commit them. Use the commands `git add .` and `git commit -m 'first commit'`.
 As stated earlier, we might work with a team and would want to contribute. Therefore, we need to create a branch where we can make our contributions. You can do this by running the following command from the main branch (it might be different on your end - my branch is named ‘trunk’): `git checkout -b contribute`. This command creates a new branch name **contribution** (if we don’t already have one) and switches to it.
-<contribution branch image>
 
+![image](https://github.com/Lochipi/Blogs/assets/108942025/cb59ddf5-15f3-4694-a35f-daabc4522522)
 
-let;s make some changes to the changes to the files, you can edit any of the file. You can run this command to add some text to the contributing file. 
+let's make some changes to the changes to the files, you can edit any of the file. You can run this command to add some text to the contributing file. 
 `echo echo 'this is my first message' >> contributing.md` or you can edit it manually, whichever way you like. 
 When you check the status you would see that you've modified the file. Add and commit it. 
-<updated_contributing.png>
+
+![image](https://github.com/Lochipi/Blogs/assets/108942025/b3b7ddeb-3536-45cb-b7a3-007eb7d88474)
+
 
 Now let's delete it. We assume that we may delete the branch accidentaly by the command. 
 `git branch -D contribing` but first checkout to the your main branch - in my case `trunk`.
-<delete a branch image>
+
+![image](https://github.com/Lochipi/Blogs/assets/108942025/b46f370a-a8c0-406d-8350-2e8a7ace14ce)
 
 if you check the branch you'll find you only have one. 
-<check branch img>
+![image](https://github.com/Lochipi/Blogs/assets/108942025/c9a068ed-b63a-4b6c-a177-3a42e0ec5701)
+
 
 #### Now what? 
 
@@ -46,7 +51,8 @@ Your hard work of contribting has gone that way? you've completely deleted your 
 **a)** **first** - **Manual revovery: the first line of defence**
  We can use reflog to recover our lost data. We can reflog the last 3 histroy commits we made. Run the following command 
     ` git reflog -3` 
-   <reflog check image>.
+![image](https://github.com/Lochipi/Blogs/assets/108942025/b118c092-ae7d-456b-a228-6531c29b9c2d)
+
 
 You can see our history and our changes. We see our last commit - `updated contributing file`
 
@@ -54,7 +60,7 @@ Now that we have the 'sha' - **1e3b6f3**.
 With that, we can rebuild the whole repo just from this little tiny sha.
 
 run this command: `git cat-file -p 1e3b6f3`
-<image sha contribuing reco>
+![image](https://github.com/Lochipi/Blogs/assets/108942025/ba208ef3-828a-4f97-9ee7-4fab337b1c14)
 
 When you run the above command,you can see it is right here with us. This means that even if we deleted a branch it doesn't mean we deleted what we've changed. Our files are in the computer. And so we can retrieve it from git. 
 
@@ -64,12 +70,13 @@ When you run the above command,you can see it is right here with us. This means 
 to check the tree run 
  ` git cat-file -p 5de65aae286245ce2e8f2e011d717fcf52652b7f `
 
-<tree img>
+![image](https://github.com/Lochipi/Blogs/assets/108942025/137fca8c-fee7-42fd-8750-127afcca114d)
+
  we can see our blob file, contributing.md.
 
 then if we then cat-file it - ` git cat-file -p 8183366bba8da4a7cdcfd39b29bd53b11ce50ed1 `
 we can see what we wrote/updated in earlier.
-<catfile contribute img>
+![image](https://github.com/Lochipi/Blogs/assets/108942025/86223613-688e-45be-aef7-5bbf8977ecf8)
 
 <!-- we can take this and cat out in a file. -->
 **Optional**: You can cat it out into a different file and save it there. that's it. You can do the same with files that you created differently and cat it out the changes. 
@@ -81,8 +88,9 @@ That seems hard go by? well we have a quicker and easier way to doing it. This m
 ## Advanced Recovery: Using Git Cherry-Pick
 remember we have a our 'sha' earlier and how to get it, right? 1e3b6f3. And if I would need this changes to my 'trunk' branch I would just merge it using the same sha by running:
  `git merge 1e3b6f3`
-  <merge sha to trunc> 
-  
+ 📷
+ ![image](https://github.com/Lochipi/Blogs/assets/108942025/f741c763-13a6-49f2-ba11-09c78df1daa6)
+
 Look at that, we have our changes we made on contributing branch to our trunk branch.We could just bring it in. This is super easy yeah? we didnt have to do the magical-hacker thing we did earlier right? yaayyy!!
 
 hint: Your commit's sha is a key piece of information
@@ -107,4 +115,4 @@ Accidentally deleting files in Git can be stressful, but Git offers ways to reco
 - Git Documentation: [git cherry-pick](https://git-scm.com/docs/git-cherry-pick)
 
 ##### last words
-If you found this guide helpful, feel free to connect with me on Twitter at EmaseLC or on LinkedIn at Cornelius Emase. Your feedback and support mean the world to me. Leave a star ⭐
+If you found this guide helpful, feel free to connect with me on [Twitter](https://twitter.com/EmaseLC) or on [LinkedIn](https://www.linkedin.com/in/cornelius-emase/). Your feedback and support mean the world to me. Leave a star ⭐
