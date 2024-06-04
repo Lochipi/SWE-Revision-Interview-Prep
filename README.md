@@ -1,12 +1,12 @@
-# 📝 Blog Repository 📚
+# 📝 Revision Repository 📚
 
-Hello there! 👋 Welcome to my blog repository. Here, you'll find all the blogs that I've written on various topics. Feel free to explore and share your thoughts!
+Hello there! 👋 Welcome to my blog repository. Here, you'll find all the blogs that I've written on various topics. Feel free to explore and share your thoughts on the discussion channel!
 
 ## 📖 Contents
 
 This repository is organized by topics. Each topic has its own directory, and each blog post is a separate markdown file within the appropriate directory.
 
-## 📝 Intrested ub contributing?
+## 📝 Intrested in contributing?
 
 feel free to make a pull request! We love contributions from the community. Please make sure your blog is in markdown format and placed in the appropriate directory.
 
