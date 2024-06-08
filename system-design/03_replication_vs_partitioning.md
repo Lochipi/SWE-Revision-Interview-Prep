@@ -1,9 +1,8 @@
 ## **Replication** 
-means keeping a copy of the same data on multiple machines that are
+Replication means keeping a copy of the same data on multiple machines that are
 connected via a network.
 
-there are several
-reasons why you might want to replicate data:
+there are several reasons why you might want to replicate data:
 • To keep data geographically close to your users (and thus reduce latency)
 • To allow the system to continue working even if some of its parts have failed
 (and thus increase availability)
@@ -40,7 +39,9 @@ on the leader.
 3. When a client wants to read from the database, it can query either the *leader* or any of the followers. However, *writes* are only accepted on the *leader* (the followers are *read-only* from the client’s point of view).
 
 ![image](https://github.com/Lochipi/SWE-Revision-Interview-Prep/assets/108942025/dc0491af-4056-4c63-ae31-fc493af1b423)
-You can [view it using this link](https://drive.google.com/file/d/1-_c7BPgJdn80gNY98HxGMWoRB3_mp6WD/view?usp=sharing) incase the image above is not found.
+You can [view it using this link](https://drive.google.com/file/d/1-_c7BPgJdn80gNY98HxGMWoRB3_mp6WD/view?usp=sharing) 
+
+incase the image above is not found.
 
 This mode of replication is a built-in feature of many relational databases, such as 
 - **MySQL**, 
