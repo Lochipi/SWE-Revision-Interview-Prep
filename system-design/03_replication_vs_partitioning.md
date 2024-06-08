@@ -39,6 +39,9 @@ base accordingly, by applying all writes in the same order as they were processe
 on the leader.
 3. When a client wants to read from the database, it can query either the *leader* or any of the followers. However, *writes* are only accepted on the *leader* (the followers are *read-only* from the client’s point of view).
 
+![image](https://github.com/Lochipi/SWE-Revision-Interview-Prep/assets/108942025/dc0491af-4056-4c63-ae31-fc493af1b423)
+You can [view it using this link](https://drive.google.com/file/d/1-_c7BPgJdn80gNY98HxGMWoRB3_mp6WD/view?usp=sharing) incase the image above is not found.
+
 This mode of replication is a built-in feature of many relational databases, such as 
 - **MySQL**, 
 - **PostgreSQL**, 
