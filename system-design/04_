@@ -1,0 +1,68 @@
+### Synchronous and Asynchronous replication
+
+This is one of the most important concepts in distributed systems. It is important to understand the difference between synchronous and asynchronous replication, and when to use each, what are the trade-offs, and how to implement them.
+
+Considering our example in the prev diagram, where we had a user posting the tweet,and the leader server is responsible for writing the tweet to the database and then replicating it to the follower servers. Then the leader server sends a response to the user that it was successfully posted and the user can see the tweet on their timeline.Think of that in that way.
+
+In **synchronous replication**, the leader server will wait for the follower servers to acknowledge that they have received the tweet and written it to their database before sending a response to the user. This means that the user will have to wait for the tweet to be replicated to all the follower servers before they can see it on their timeline. This is a good thing because it ensures that the data is consistent across all the servers. However, it also means that the user **will have to wait for the replication to complete before they can see the tweet on their timeline**. This can be a problem if the follower servers are slow or if there is a network issue between the leader server and the follower servers.
+
+In **asynchronous replication**, the leader server will send a response to the user as soon as it has written the tweet to its database. It will then replicate the tweet to the follower servers in the background. This means that the user does not have to wait for the replication to complete before they can see the tweet on their timeline.
+
+**con**
+However, it also means that there is a chance that the data on the follower servers will be out of date compared to the leader server. This can be a problem if the leader server fails before the data is replicated to the follower servers.
+
+The image below, I've demo'd how they might look in a diagram.
+The image is hand-written, will find time and update on draw.io for clear visuals.
+
+<image here>
+Semi-synchronous replication is a compromise between synchronous and asynchronous replication. In semi-synchronous replication, the leader server will wait for at least one follower server to acknowledge that it has received the tweet and written it to its database before sending a response to the user. This means that the user will not have to wait for all the follower servers to replicate the tweet before they can see it on their timeline. However, it also means that the data is more consistent across all the servers compared to asynchronous replication.
+
+Often, leader-based replication is configured to be completely asynchronous.
+In this case, if the leader fails and is not recoverable, any writes that have not yet been replicated to followers are lost. This means that a write is not guaranteed to be durable,even if it has been confirmed to the client. However, a fully asynchronous configuration has the advantage that the leader can continue processing writes, even if all of its followers have fallen behind.
+
+Weakening durability may sound like a bad trade-off, but asynchronous replication is
+nevertheless widely used, especially if there are many followers or if they are geo‐
+graphically distributed.
+
+### Research on Replication
+
+It can be a serious problem for asynchronously replicated systems to lose data if the leader fails, so researchers have continued investigating replication methods that do not lose data but still provide good performance and availability. For example, **chain replication** is a variant of **synchronous replication** that has been successfully implemented in a few systems such as **Microsoft Azure Storage**.
+
+In **chain replication**, each node knows only about its immediate neighbors in the chain. When a client writes to the leader, the leader forwards the write to the first follower, which forwards it to the next follower, and so on. The write is considered durable as soon as it has been written to the last follower in the chain. This means that the write is not durable until it has been replicated to all the followers, but it is durable as soon as it has been replicated to the last follower.
+
+You can learn more on this in the research paper [**Chain Replication for Supporting
+High Throughput and Availability**](https://static.usenix.org/events/osdi04/tech/full_papers/renesse/renesse.pdf) by **Robert van Renesse and Fred B. Schneider**.
+
+There is a strong connection between consistency of replication and consensus (get‐
+ting several nodes to agree on a value). The **Paxos** algorithm, which is widely used for consensus, can be used to implement chain replication. The **Raft** algorithm is a more recent consensus algorithm that is easier to understand than Paxos, and it is also used in some systems for implementing replication.
+
+### Setting Up New Followers
+
+From time to time, you need to set up new followers—perhaps to increase the num‐
+ber of replicas, or to replace failed nodes. How do you ensure that the new follower
+has an accurate copy of the leader’s data?
+Simply copying data files from one node to another is typically not sufficient: clients are constantly writing to the database, and the data is always in flux, so a standard file copy would see different parts of the database at different points in time. The result might not make any sense.
+
+You could make the files on disk consistent by locking the database (making it
+unavailable for writes), but that would go against our goal of high availability.
+
+Fortunately, setting up a follower can usually be done without downtime. Conceptually, the process looks like this:
+
+1. Take a consistent snapshot of the leader’s database at some point in time—if pos‐
+   sible, without taking a lock on the entire database. Most databases have this fea‐
+   ture, as it is also required for backups. In some cases, third-party tools are
+   needed, such as **innobackupex for MySQL.**
+2. Copy the snapshot to the new follower node.
+3. The follower connects to the leader and requests all the data changes that have
+   happened since the snapshot was taken. This requires that the snapshot is associ‐
+   ated with an exact position in the leader’s replication log. That position has vari‐
+   ous names: for example, **PostgreSQL** calls it the **log sequence number**, and
+   **MySQL** calls it the **binlog coordinates.**
+4. When the follower has processed the backlog of data changes since the snapshot,
+   we say it has caught up. It can now continue to process data changes from the
+   leader as they happen.
+   The practical steps of setting up a follower vary significantly by database. In some
+   systems the process is fully automated, whereas in others it can be a somewhat arcane multi-step workflow that needs to be manually performed by an administrator.
+
+The next series we will make it short and have some few questions to test your understanding of the concepts we've discussed so far.
+Till then, keep learning and keep building, if you have any great ideas open a discussion and let's talk about it.
