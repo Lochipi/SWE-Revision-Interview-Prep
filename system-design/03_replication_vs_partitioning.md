@@ -3,10 +3,10 @@ Replication means keeping a copy of the same data on multiple machines that are
 connected via a network.
 
 there are several reasons why you might want to replicate data:
-• To keep data geographically close to your users (and thus reduce latency)
-• To allow the system to continue working even if some of its parts have failed
+- • To keep data geographically close to your users (and thus reduce latency)
+- • To allow the system to continue working even if some of its parts have failed
 (and thus increase availability)
-• To scale out the number of machines that can serve read queries (and thus
+- • To scale out the number of machines that can serve read queries (and thus
 increase read throughput)
 
 If the data you're replicating remains static, replication is straightforward: simply copy the data to each node once, and the task is complete. The real challenge in replication arises when managing changes to the replicated data.
@@ -16,9 +16,7 @@ If the data you're replicating remains static, replication is straightforward: s
 - multi-leader
 - leaderless replication
 
-Almost all dis‐
-tributed databases use one of these three approaches. They all have various pros and
-cons, which we will examine in detail in the later series.
+Almost all distributed databases use one of these three approaches. They all have various pros and cons, which we will examine in detail in the later series.
 
 
 #### Leaders and Followers
