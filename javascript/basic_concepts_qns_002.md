@@ -40,12 +40,12 @@ fruits.forEach((fruit, index, arr) => {
 d. `for...in` loop:
 This iterates over indices, better for objects.
 
-    ```javascript
-    let fruits = ["Apple", "Banana", "Cherry"];
-    for (let index in fruits) {
-      console.log(fruits[index]);
-    }
-    ```
+```javascript
+let fruits = ["Apple", "Banana", "Cherry"];
+for (let index in fruits) {
+  console.log(fruits[index]);
+}
+```
 
 e. `while` loop:
 This loop continues to execute as long as the specified condition evaluates to true.
@@ -124,39 +124,40 @@ Explanation:
 
 When you call `add5(2)`, it's doing like this:
 
-    ```javascript
-    function(2){
-        return 5 +2;
-    }
-    ```
+````javascript
+   function(2){
+       return 5 +2;
+   }
+```
 
 Example 3. Private variables and methods
 Closures can be used to create private variables and methods.
 
 ```javascript
 function Counter(){
-    let counter = 0; // private variable
+   let counter = 0; // private variable
 
-    return {
-        incremement: function(){
-            counter ++
-            return count;
-        }
-        decrement: function (){
-            counter --;
-            return count;
-        }
-        getCount: function() {
-            return count;
-        }
-    }
+   return {
+       incremement: function(){
+           counter ++
+           return count;
+       }
+       decrement: function (){
+           counter --;
+           return count;
+       }
+       getCount: function() {
+           return count;
+       }
+   }
 }
 const myCounter = Counter();
 console.log(myCounter.increment()); // Outputs: 1
 console.log(myCounter.increment()); // Outputs: 2
 console.log(myCounter.decrement()); // Outputs: 1
 console.log(myCounter.getCount()); // Outputs: 1
-```
+````
+
 #### Advantages of closures
 - data encapsulation
 - mantaining states
